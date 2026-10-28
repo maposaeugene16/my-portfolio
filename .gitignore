@@ -1,4 +1,5 @@
 # Dependencies
+node_modules/
 /node_modules
 /.pnp
 .pnp.js
@@ -8,10 +9,13 @@
 /coverage
 
 # Next.js build output
+.next/
 /.next/
+out/
 /out/
 
 # Production
+build/
 /build
 
 # Debug logs
