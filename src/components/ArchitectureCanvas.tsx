@@ -1,386 +1,599 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Server, Database, Shield, Layers, Radio, AlertTriangle, RefreshCw, Cpu, Activity, Play } from "lucide-react";
+import {
+  Globe,
+  Server,
+  Database,
+  Cloud,
+  ShieldCheck,
+  CheckCircle2,
+  Play,
+  RotateCcw,
+  ArrowRight,
+  Layers,
+  Lock,
+  Workflow,
+  Sparkles,
+  ExternalLink,
+} from "lucide-react";
 import { soundFx } from "./SoundManager";
 
-interface ArchitectureNode {
+interface ArchitectureStep {
+  id: string;
+  stageNumber: number;
+  title: string;
+  role: string;
+  tech: string[];
+  description: string;
+  features: string[];
+  metrics: { label: string; value: string };
+}
+
+interface ProjectArchitecture {
   id: string;
   name: string;
-  role: string;
-  type: "gateway" | "loadbalancer" | "service" | "cache" | "raft-db" | "queue";
-  status: "healthy" | "degraded" | "failed";
-  tps: number;
-  latency: string;
-  details: string;
-  tech: string;
+  tagline: string;
+  liveUrl?: string;
+  sampleRequest: {
+    action: string;
+    step1: string;
+    step2: string;
+    step3: string;
+    step4: string;
+  };
+  steps: ArchitectureStep[];
 }
 
 export default function ArchitectureCanvas() {
-  const [activeTab, setActiveTab] = useState<"flow" | "failover">("flow");
-  const [isSimulatingSpike, setIsSimulatingSpike] = useState(false);
-  const [selectedNode, setSelectedNode] = useState<ArchitectureNode | null>(null);
-  const [raftLeaderId, setRaftLeaderId] = useState<string>("db-node-1");
-  const [isPartitioned, setIsPartitioned] = useState<boolean>(false);
-  const [trafficPulse, setTrafficPulse] = useState<number>(0);
+  const [selectedProjectId, setSelectedProjectId] = useState<string>("industry-hub");
+  const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
+  const [isTracing, setIsTracing] = useState<boolean>(false);
+  const [traceStep, setTraceStep] = useState<number | null>(null);
 
-  const nodes: ArchitectureNode[] = [
+  const projects: ProjectArchitecture[] = [
     {
-      id: "edge-waf",
-      name: "Cloudflare Edge & WAF",
-      role: "DDoS Mitigation & TLS Termination",
-      type: "gateway",
-      status: "healthy",
-      tps: isSimulatingSpike ? 245000 : 42000,
-      latency: "1.2ms",
-      details: "Anycast routing, QUIC/HTTP3 termination, automated rate limiting using token bucket algorithm.",
-      tech: "Rust / Cloudflare Workers"
+      id: "industry-hub",
+      name: "Course Shop & Industry Hub",
+      tagline: "NUST Final Year Project // Full-Stack Student & Industry Matching Platform",
+      liveUrl: "https://course-shop-industry-hub-5tdz.vercel.app",
+      sampleRequest: {
+        action: "Student Enrolls in an Industry Project Course",
+        step1: "Student clicks 'Enroll' on the Next.js UI; client validates session & input.",
+        step2: "Secure HTTPS POST sent to API with JWT bearer token and course payload.",
+        step3: "Database verifies course availability and commits atomic transaction in PostgreSQL.",
+        step4: "Vercel edge updates cache; UI updates instantly with enrollment confirmation.",
+      },
+      steps: [
+        {
+          id: "step-frontend",
+          stageNumber: 1,
+          title: "Client & UI Layer",
+          role: "Responsive Next.js Frontend",
+          tech: ["Next.js 14", "React", "Tailwind CSS", "TypeScript"],
+          description:
+            "Modern, mobile-responsive user interface with server-side rendering for quick load times and interactive state management.",
+          features: [
+            "Server & Client Components for optimal performance",
+            "Tailwind CSS for responsive mobile-to-desktop design",
+            "Instant client-side validation before network dispatch",
+            "Accessible navigation and interactive course catalogs",
+          ],
+          metrics: { label: "First Contentful Paint", value: "< 0.8s" },
+        },
+        {
+          id: "step-api",
+          stageNumber: 2,
+          title: "API & Logic Layer",
+          role: "Secure RESTful Backend",
+          tech: ["Python / Django", "Node.js", "REST APIs", "JWT Auth"],
+          description:
+            "Stateless backend endpoints handling business logic, role-based access control, and student authentication.",
+          features: [
+            "JWT token authentication & encrypted password hashing",
+            "Strict CORS policies and sanitized request bodies",
+            "Course enrollment and industry project matching algorithms",
+            "Structured JSON API responses with HTTP status codes",
+          ],
+          metrics: { label: "Average API Response", value: "~45ms" },
+        },
+        {
+          id: "step-db",
+          stageNumber: 3,
+          title: "Database Layer",
+          role: "Relational Data Persistence",
+          tech: ["PostgreSQL", "Supabase", "SQL Relational Schema"],
+          description:
+            "Robust relational database storing user profiles, course inventories, industry partner postings, and enrollment records.",
+          features: [
+            "ACID-compliant transactions preventing duplicate enrollments",
+            "Foreign-key relational integrity across students & courses",
+            "Indexed queries for instant catalog search and filtering",
+            "Encrypted connection strings and automated data backups",
+          ],
+          metrics: { label: "Query Execution", value: "< 12ms" },
+        },
+        {
+          id: "step-cloud",
+          stageNumber: 4,
+          title: "Cloud & Deployment",
+          role: "Global Edge Delivery",
+          tech: ["Vercel", "Git CI/CD", "Global Edge CDN", "SSL/TLS"],
+          description:
+            "Automated continuous deployment workflow delivering the platform worldwide with automatic HTTPS and edge caching.",
+          features: [
+            "Zero-downtime deployments triggered on git push",
+            "Global Edge Network caching assets close to users",
+            "Automatic SSL certificates and DNS management",
+            "Live production monitoring and health diagnostics",
+          ],
+          metrics: { label: "Uptime SLA", value: "99.9%" },
+        },
+      ],
     },
     {
-      id: "envoy-lb",
-      name: "Envoy Proxy L7 Mesh",
-      role: "Dynamic Weighted Routing & Circuit Breaking",
-      type: "loadbalancer",
-      status: "healthy",
-      tps: isSimulatingSpike ? 245000 : 42000,
-      latency: "0.4ms",
-      details: "Consistent hashing ring with virtual nodes, automatic health-checking and gRPC multiplexing.",
-      tech: "Envoy / C++"
+      id: "citycasuallink",
+      name: "CityCasualLink Platform",
+      tagline: "Hackathon Project // Real-Time Casual Work & Employer Connection",
+      liveUrl: "https://citycasuallink-au82.vercel.app",
+      sampleRequest: {
+        action: "Employer Posts a Casual Job Opportunity",
+        step1: "Employer fills job details in React UI; instant validation verifies rate & date.",
+        step2: "POST request hits the API; employer verified and rate limits enforced.",
+        step3: "Job record indexed in database; made instantly queryable by nearby workers.",
+        step4: "Live notification broadcast; updated job list served via Vercel edge.",
+      },
+      steps: [
+        {
+          id: "step-frontend-ccl",
+          stageNumber: 1,
+          title: "Client & UI Layer",
+          role: "Mobile-First Web App",
+          tech: ["React", "Next.js", "Tailwind CSS", "Lucide Icons"],
+          description:
+            "Designed for workers and employers on mobile devices, ensuring simple one-tap job applications and profile browsing.",
+          features: [
+            "Lightweight bundle size optimized for 3G/4G mobile connections",
+            "Clear visual cards for job requirements, wages, and locations",
+            "Quick WhatsApp and phone call triggers for immediate contact",
+            "Offline-friendly state persistence",
+          ],
+          metrics: { label: "Mobile Page Load", value: "< 1.1s" },
+        },
+        {
+          id: "step-api-ccl",
+          stageNumber: 2,
+          title: "API & Logic Layer",
+          role: "Matching & Dispatch API",
+          tech: ["Node.js / Express", "REST Endpoints", "JSON Middleware"],
+          description:
+            "Coordinates communication between casual job seekers and hiring employers with instant job classification.",
+          features: [
+            "Job category tagging (construction, catering, logistics, retail)",
+            "Verification middleware preventing fraudulent postings",
+            "Geographic and availability filtering logic",
+            "Secure environment variable isolation",
+          ],
+          metrics: { label: "API Latency", value: "~38ms" },
+        },
+        {
+          id: "step-db-ccl",
+          stageNumber: 3,
+          title: "Database Layer",
+          role: "Job & Worker Registry",
+          tech: ["PostgreSQL", "Relational Models", "Connection Pool"],
+          description:
+            "Stores candidate profiles, verified phone contacts, job descriptions, and application timestamps.",
+          features: [
+            "Relational models linking employers to posted tasks",
+            "Indexed search for job categories and locations",
+            "Data privacy protection for worker personal info",
+            "Optimized query execution",
+          ],
+          metrics: { label: "DB Read Latency", value: "< 15ms" },
+        },
+        {
+          id: "step-cloud-ccl",
+          stageNumber: 4,
+          title: "Cloud & Deployment",
+          role: "Production Vercel Host",
+          tech: ["Vercel Edge", "GitHub Actions", "HTTPS Encryption"],
+          description:
+            "Production deployment ensuring 24/7 availability for job seekers across urban and casual labor markets.",
+          features: [
+            "Fast CDN response times for mobile users across regions",
+            "Continuous deployment on every git commit",
+            "Standard HTTPS encryption protecting user data",
+            "Scalable serverless execution on demand",
+          ],
+          metrics: { label: "Availability", value: "100%" },
+        },
+      ],
     },
     {
-      id: "api-srv-1",
-      name: "API Service Node A",
-      role: "Stateless Execution Pod",
-      type: "service",
-      status: isPartitioned ? "degraded" : "healthy",
-      tps: isSimulatingSpike ? 82000 : 14000,
-      latency: "4.8ms",
-      details: "Async event-loop runtime with Tokio, pooling DB connections with exponential backoff retry.",
-      tech: "Rust / Tokio"
+      id: "zimscore",
+      name: "ZIMSCORE Web Platform",
+      tagline: "Academic Platform // Online Exam & Score Verification System",
+      liveUrl: "https://zimscore.vercel.app",
+      sampleRequest: {
+        action: "Student Verifies Examination Results",
+        step1: "User enters Candidate Number & PIN in the secure result lookup form.",
+        step2: "API receives request, hashes sensitive credentials, and checks rate limits.",
+        step3: "Database performs indexed search on verified examination records.",
+        step4: "Official tamper-evident result statement rendered and returned to user.",
+      },
+      steps: [
+        {
+          id: "step-frontend-zim",
+          stageNumber: 1,
+          title: "Client & UI Layer",
+          role: "Secure Verification Portal",
+          tech: ["Next.js", "React", "Tailwind CSS", "Client Security"],
+          description:
+            "Clean, authoritative interface for candidates, schools, and institutions to verify academic credentials.",
+          features: [
+            "Form field input sanitization preventing injection attacks",
+            "Printable result statement layout with official seals",
+            "Real-time feedback on invalid or missing candidate IDs",
+            "High-contrast, accessible typography for clarity",
+          ],
+          metrics: { label: "First Load JS", value: "< 85 kB" },
+        },
+        {
+          id: "step-api-zim",
+          stageNumber: 2,
+          title: "API & Logic Layer",
+          role: "Verification Engine",
+          tech: ["RESTful API", "Cryptographic Hashing", "Rate Limiter"],
+          description:
+            "Secure verification microservice enforcing strict rate-limiting to prevent automated scraping of student records.",
+          features: [
+            "Rate-limiting to thwart brute-force PIN attempts",
+            "Zero-trust credential verification logic",
+            "Audit trail logging for result queries",
+            "Standardized JSON error messaging",
+          ],
+          metrics: { label: "Verification Speed", value: "~55ms" },
+        },
+        {
+          id: "step-db-zim",
+          stageNumber: 3,
+          title: "Database Layer",
+          role: "Academic Records Vault",
+          tech: ["PostgreSQL", "Encrypted Fields", "ACID Quorum"],
+          description:
+            "Strictly guarded relational tables with academic session records, grades, candidate indexes, and school codes.",
+          features: [
+            "Deterministic indexing on candidate ID for instantaneous retrieval",
+            "Read-only query safeguards for public verification paths",
+            "Strict backup retention and recovery policies",
+            "Row-level security enforcement",
+          ],
+          metrics: { label: "Indexed Lookup", value: "< 8ms" },
+        },
+        {
+          id: "step-cloud-zim",
+          stageNumber: 4,
+          title: "Cloud & Deployment",
+          role: "Vercel Cloud Edge",
+          tech: ["Vercel", "Git Integration", "SSL Certificate"],
+          description:
+            "Reliable cloud deployment capable of handling traffic surges during national examination release dates.",
+          features: [
+            "Auto-scaling serverless capacity during result announcements",
+            "High-availability edge routing across regional nodes",
+            "Continuous deployment workflow",
+            "Complete HTTPS/TLS 1.3 encryption end-to-end",
+          ],
+          metrics: { label: "Peak Reliability", value: "99.95%" },
+        },
+      ],
     },
-    {
-      id: "api-srv-2",
-      name: "API Service Node B",
-      role: "Stateless Execution Pod",
-      type: "service",
-      status: "healthy",
-      tps: isSimulatingSpike ? 81500 : 14000,
-      latency: "4.6ms",
-      details: "Zero-copy JSON & Protobuf deserialization, distributed OpenTelemetry trace propagation.",
-      tech: "Rust / Tokio"
-    },
-    {
-      id: "redis-cache",
-      name: "Redis Cluster (L1/L2)",
-      role: "Distributed In-Memory Cache",
-      type: "cache",
-      status: "healthy",
-      tps: isSimulatingSpike ? 210000 : 38000,
-      latency: "0.35ms",
-      details: "Sub-millisecond read throughput with bloom filters to eliminate cache-penetration penalties.",
-      tech: "Redis 7 / Lua"
-    },
-    {
-      id: "kafka-bus",
-      name: "Kafka Event Broker",
-      role: "Durable Write-Ahead Log",
-      type: "queue",
-      status: "healthy",
-      tps: isSimulatingSpike ? 140000 : 25000,
-      latency: "1.8ms",
-      details: "Partitioned topic logs with exactly-once idempotency guarantees and zstd batch compression.",
-      tech: "Apache Kafka / KRaft"
-    },
-    {
-      id: "db-node-1",
-      name: "Raft Leader Node 1",
-      role: "Linearizable Replicated State Machine",
-      type: "raft-db",
-      status: isPartitioned ? "failed" : "healthy",
-      tps: isSimulatingSpike ? 45000 : 8500,
-      latency: isPartitioned ? "TIMEOUT" : "2.1ms",
-      details: "Appends log entries to disk WAL, coordinates two-phase commit over TCP peer quorum.",
-      tech: "Custom Raft / LSM-Tree"
-    },
-    {
-      id: "db-node-2",
-      name: "Raft Follower / Replica 2",
-      role: isPartitioned ? "Promoted Raft Leader (Term 4)" : "Quorum Log Follower",
-      type: "raft-db",
-      status: "healthy",
-      tps: isPartitioned ? (isSimulatingSpike ? 45000 : 8500) : 4200,
-      latency: "2.3ms",
-      details: "Maintains log parity with append-entry RPC heartbeats. Takes over via leader election on heartbeat timeout.",
-      tech: "Custom Raft / LSM-Tree"
-    }
   ];
 
-  // Auto trigger traffic animation pulses
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTrafficPulse((prev) => (prev + 1) % 100);
-    }, 1500);
-    return () => clearInterval(interval);
-  }, []);
+  const currentProject = projects.find((p) => p.id === selectedProjectId) || projects[0];
+  const activeStep = currentProject.steps[activeStepIndex];
 
-  const triggerSpikeSimulation = () => {
-    soundFx.playBeep(620, 0.1, "triangle");
-    setIsSimulatingSpike(true);
-    setTimeout(() => {
-      setIsSimulatingSpike(false);
-      soundFx.playSuccess();
-    }, 4500);
+  // Handle request tracing animation
+  const handleTraceRequest = () => {
+    if (isTracing) return;
+    soundFx.playClick();
+    setIsTracing(true);
+    setTraceStep(0);
+    setActiveStepIndex(0);
+
+    const stepIntervals = [0, 1, 2, 3];
+    stepIntervals.forEach((stepIdx) => {
+      setTimeout(() => {
+        setTraceStep(stepIdx);
+        setActiveStepIndex(stepIdx);
+        soundFx.playBeep(440 + stepIdx * 120, 0.1, "sine");
+
+        if (stepIdx === 3) {
+          setTimeout(() => {
+            soundFx.playSuccess();
+            setIsTracing(false);
+          }, 1200);
+        }
+      }, stepIdx * 1500);
+    });
   };
 
-  const togglePartition = () => {
-    soundFx.playBeep(320, 0.15, "sawtooth");
-    const nextState = !isPartitioned;
-    setIsPartitioned(nextState);
-    if (nextState) {
-      setRaftLeaderId("db-node-2");
-    } else {
-      setRaftLeaderId("db-node-1");
+  const resetTrace = () => {
+    soundFx.playClick();
+    setIsTracing(false);
+    setTraceStep(null);
+    setActiveStepIndex(0);
+  };
+
+  const getStepIcon = (stageNumber: number) => {
+    switch (stageNumber) {
+      case 1:
+        return <Globe className="w-5 h-5" />;
+      case 2:
+        return <Server className="w-5 h-5" />;
+      case 3:
+        return <Database className="w-5 h-5" />;
+      case 4:
+        return <Cloud className="w-5 h-5" />;
+      default:
+        return <Layers className="w-5 h-5" />;
     }
   };
 
   return (
-    <div className="w-full glass-panel rounded-2xl p-6 border border-cyan-500/20 bg-slate-900/60 shadow-2xl relative">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+    <div className="w-full glass-panel rounded-2xl p-6 sm:p-8 border border-emerald-500/20 bg-slate-900/60 shadow-2xl relative">
+      {/* Header bar */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-slate-800">
         <div>
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-mono mb-2">
-            <Layers className="w-3.5 h-3.5" />
-            CS Lab 02 // Distributed Topology Simulator
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-mono font-medium mb-2 border border-emerald-500/20">
+            <Workflow className="w-3.5 h-3.5" />
+            Full-Stack System Architecture
           </div>
-          <h3 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-            Production Distributed Micro-Architecture
+          <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
+            How I Engineer & Deploy Web Applications
           </h3>
-          <p className="text-slate-400 text-sm mt-1">
-            Simulate 250k+ req/sec traffic cascades, partition injection, and automatic Raft consensus failover.
+          <p className="text-slate-400 text-sm mt-1 max-w-2xl">
+            A clear walkthrough of how user requests flow from responsive Next.js frontends through secure APIs, relational databases, and Vercel cloud hosting.
           </p>
         </div>
 
-        {/* Action Controls */}
-        <div className="flex flex-wrap items-center gap-3">
+        {/* Action button to trace an example request */}
+        <div className="flex items-center gap-2.5">
           <button
-            onClick={triggerSpikeSimulation}
-            disabled={isSimulatingSpike}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-medium transition-all duration-200 border ${
-              isSimulatingSpike
-                ? "bg-cyan-500 text-slate-950 border-cyan-400 shadow-lg shadow-cyan-500/30 animate-pulse"
-                : "bg-cyan-500/10 border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20"
-            }`}
+            onClick={handleTraceRequest}
+            disabled={isTracing}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-bold text-xs font-mono transition-all duration-150 shadow-lg shadow-emerald-500/25 disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            <Activity className="w-4 h-4" />
-            {isSimulatingSpike ? "Traffic Surge Active (245k TPS)..." : "Simulate 5x Traffic Spike"}
+            <Play className={`w-3.5 h-3.5 fill-slate-950 ${isTracing ? "animate-spin" : ""}`} />
+            {isTracing ? `Tracing Step ${(traceStep ?? 0) + 1} of 4...` : "Trace Example Request Flow"}
           </button>
-
-          <button
-            onClick={togglePartition}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-medium transition-all duration-200 border ${
-              isPartitioned
-                ? "bg-rose-500/20 border-rose-500 text-rose-300"
-                : "bg-slate-800/80 border-slate-700 text-slate-300 hover:border-slate-600"
-            }`}
-          >
-            <AlertTriangle className="w-4 h-4 text-rose-400" />
-            {isPartitioned ? "Heal Partition (Recover Quorum)" : "Inject Leader Partition (Chaos)"}
-          </button>
+          {traceStep !== null && (
+            <button
+              onClick={resetTrace}
+              className="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs transition-all border border-slate-700"
+              title="Reset trace"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Visual Canvas Diagram */}
-      <div className="my-6 p-4 rounded-xl bg-slate-950/80 border border-slate-800 relative overflow-hidden">
-        {/* Subtle grid background */}
-        <div className="absolute inset-0 bg-cyber-grid opacity-30 pointer-events-none" />
-
-        {/* Simulated packet flow streams */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 relative z-10">
-          {/* Column 1: Edge & Gateway */}
-          <div className="flex flex-col gap-4">
-            <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider font-semibold">
-              Layer 1 // Ingress & Edge
-            </span>
-            {nodes.slice(0, 2).map((node) => (
-              <NodeCard
-                key={node.id}
-                node={node}
-                isSelected={selectedNode?.id === node.id}
-                onSelect={() => {
-                  soundFx.playClick();
-                  setSelectedNode(node);
-                }}
-              />
-            ))}
-          </div>
-
-          {/* Column 2: Stateless Compute Services */}
-          <div className="flex flex-col gap-4">
-            <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider font-semibold">
-              Layer 2 // Compute & Logic
-            </span>
-            {nodes.slice(2, 4).map((node) => (
-              <NodeCard
-                key={node.id}
-                node={node}
-                isSelected={selectedNode?.id === node.id}
-                onSelect={() => {
-                  soundFx.playClick();
-                  setSelectedNode(node);
-                }}
-              />
-            ))}
-          </div>
-
-          {/* Column 3: In-Memory & Streaming */}
-          <div className="flex flex-col gap-4">
-            <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider font-semibold">
-              Layer 3 // Caching & WAL
-            </span>
-            {nodes.slice(4, 6).map((node) => (
-              <NodeCard
-                key={node.id}
-                node={node}
-                isSelected={selectedNode?.id === node.id}
-                onSelect={() => {
-                  soundFx.playClick();
-                  setSelectedNode(node);
-                }}
-              />
-            ))}
-          </div>
-
-          {/* Column 4: Consensus & Storage */}
-          <div className="flex flex-col gap-4">
-            <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider font-semibold">
-              Layer 4 // Consensus Quorum
-            </span>
-            {nodes.slice(6, 8).map((node) => (
-              <NodeCard
-                key={node.id}
-                node={node}
-                isSelected={selectedNode?.id === node.id}
-                isLeader={raftLeaderId === node.id}
-                onSelect={() => {
-                  soundFx.playClick();
-                  setSelectedNode(node);
-                }}
-              />
-            ))}
-          </div>
+      {/* Project Architecture Selector Tabs */}
+      <div className="pt-6 pb-2">
+        <div className="text-xs font-mono text-slate-400 uppercase tracking-wider mb-2 font-semibold">
+          Select Real Project Architecture:
         </div>
-
-        {/* Real-time topology banner */}
-        <div className="mt-4 pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between text-xs font-mono text-slate-400">
-          <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              Consensus State: {isPartitioned ? "Split-Brain Prevented (Leader Re-elected)" : "Linearizable Quorum (3/3 Nodes)"}
-            </span>
-            <span>•</span>
-            <span className="text-cyan-400">P99 Replication Lag: 1.4ms</span>
-          </div>
-          <div className="text-slate-500">
-            Click any node for deep micro-architecture specifications
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+          {projects.map((proj) => {
+            const isSelected = proj.id === selectedProjectId;
+            return (
+              <button
+                key={proj.id}
+                onClick={() => {
+                  soundFx.playClick();
+                  setSelectedProjectId(proj.id);
+                  setActiveStepIndex(0);
+                  setTraceStep(null);
+                }}
+                className={`text-left p-3 rounded-xl border transition-all duration-200 cursor-pointer ${
+                  isSelected
+                    ? "bg-slate-950 border-emerald-500 shadow-md shadow-emerald-500/10 text-white"
+                    : "bg-slate-950/50 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-xs tracking-tight">{proj.name}</span>
+                  {isSelected && <Sparkles className="w-3.5 h-3.5 text-emerald-400" />}
+                </div>
+                <div className="text-[11px] text-slate-400 mt-1 line-clamp-1 font-mono">
+                  {proj.tagline.split("//")[0]}
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* Selected Node Spec Inspector */}
-      {selectedNode && (
-        <div className="mt-4 p-4 rounded-xl bg-slate-950 border border-cyan-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 animate-in fade-in duration-200">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <h4 className="text-white font-bold text-sm">{selectedNode.name}</h4>
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-cyan-950 text-cyan-300 border border-cyan-800">
-                {selectedNode.tech}
-              </span>
-            </div>
-            <p className="text-slate-300 text-xs leading-relaxed max-w-2xl">
-              {selectedNode.details}
-            </p>
+      {/* Live Request Flow Trace Banner (Visible during or after trace) */}
+      <div className="my-5 p-4 rounded-xl bg-slate-950/90 border border-slate-800 relative overflow-hidden">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-slate-400 font-semibold">Active Request Scenario:</span>
+            <span className="text-emerald-300 font-bold">{currentProject.sampleRequest.action}</span>
           </div>
+          {currentProject.liveUrl && (
+            <a
+              href={currentProject.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-cyan-400 hover:text-cyan-300 text-xs font-mono underline"
+            >
+              <span>View Deployed Project</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          )}
+        </div>
 
-          <div className="flex items-center gap-4 text-xs font-mono shrink-0">
-            <div>
-              <span className="text-slate-500 block text-[10px]">THROUGHPUT</span>
-              <span className="text-cyan-400 font-bold">{selectedNode.tps.toLocaleString()} ops/s</span>
+        {/* Step-by-step Request Narrative */}
+        <div className="mt-3 pt-3 border-t border-slate-800/80 text-xs text-slate-300 leading-relaxed font-mono">
+          <span className="text-slate-400">Current Action: </span>
+          {activeStepIndex === 0 && (
+            <span className="text-cyan-300 font-medium">{currentProject.sampleRequest.step1}</span>
+          )}
+          {activeStepIndex === 1 && (
+            <span className="text-blue-300 font-medium">{currentProject.sampleRequest.step2}</span>
+          )}
+          {activeStepIndex === 2 && (
+            <span className="text-emerald-300 font-medium">{currentProject.sampleRequest.step3}</span>
+          )}
+          {activeStepIndex === 3 && (
+            <span className="text-amber-300 font-medium">{currentProject.sampleRequest.step4}</span>
+          )}
+        </div>
+      </div>
+
+      {/* Visual 4-Stage Architecture Pipeline Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
+        {currentProject.steps.map((step, idx) => {
+          const isSelected = activeStepIndex === idx;
+          const isBeingTraced = traceStep === idx;
+
+          let cardBorder = "border-slate-800 bg-slate-950/60";
+          let badgeColor = "bg-slate-800 text-slate-400";
+          let iconColor = "text-slate-400";
+
+          if (idx === 0) {
+            iconColor = "text-cyan-400";
+            if (isSelected) cardBorder = "border-cyan-500 bg-slate-950 shadow-lg shadow-cyan-500/15";
+            if (isSelected) badgeColor = "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40";
+          } else if (idx === 1) {
+            iconColor = "text-blue-400";
+            if (isSelected) cardBorder = "border-blue-500 bg-slate-950 shadow-lg shadow-blue-500/15";
+            if (isSelected) badgeColor = "bg-blue-500/20 text-blue-300 border border-blue-500/40";
+          } else if (idx === 2) {
+            iconColor = "text-emerald-400";
+            if (isSelected) cardBorder = "border-emerald-500 bg-slate-950 shadow-lg shadow-emerald-500/15";
+            if (isSelected) badgeColor = "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+          } else if (idx === 3) {
+            iconColor = "text-amber-400";
+            if (isSelected) cardBorder = "border-amber-500 bg-slate-950 shadow-lg shadow-amber-500/15";
+            if (isSelected) badgeColor = "bg-amber-500/20 text-amber-300 border border-amber-500/40";
+          }
+
+          return (
+            <div
+              key={step.id}
+              onClick={() => {
+                soundFx.playClick();
+                setActiveStepIndex(idx);
+              }}
+              className={`p-4 rounded-xl border transition-all duration-200 cursor-pointer relative group flex flex-col justify-between ${cardBorder} ${
+                isBeingTraced ? "ring-2 ring-emerald-400 scale-[1.02]" : ""
+              }`}
+            >
+              <div>
+                {/* Header: Stage Number & Status Badge */}
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className={`p-2 rounded-lg bg-slate-900 border border-slate-800 ${iconColor}`}>
+                      {getStepIcon(step.stageNumber)}
+                    </div>
+                    <span className="text-[11px] font-mono text-slate-400 font-bold uppercase tracking-wider">
+                      Stage 0{step.stageNumber}
+                    </span>
+                  </div>
+
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-semibold ${badgeColor}`}>
+                    {isSelected ? "Active Layer" : "Click to View"}
+                  </span>
+                </div>
+
+                {/* Layer Title & Role */}
+                <h4 className="text-white font-bold text-sm tracking-tight group-hover:text-emerald-300 transition-colors">
+                  {step.title}
+                </h4>
+                <p className="text-slate-400 text-xs font-mono mt-0.5 mb-3">{step.role}</p>
+
+                {/* Technologies List */}
+                <div className="flex flex-wrap gap-1.5 mb-3">
+                  {step.tech.map((t) => (
+                    <span
+                      key={t}
+                      className="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 text-slate-300 border border-slate-800"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Bottom metric info */}
+              <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono text-slate-400">
+                <span>{step.metrics.label}</span>
+                <span className="font-bold text-white">{step.metrics.value}</span>
+              </div>
             </div>
-            <div className="w-[1px] h-6 bg-slate-800" />
-            <div>
-              <span className="text-slate-500 block text-[10px]">TAIL LATENCY</span>
-              <span className="text-emerald-400 font-bold">{selectedNode.latency}</span>
+          );
+        })}
+      </div>
+
+      {/* Selected Layer Deep-Dive Inspector */}
+      {activeStep && (
+        <div className="p-5 sm:p-6 rounded-xl bg-slate-950 border border-slate-800 animate-in fade-in duration-200">
+          <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
+            <div className="space-y-3 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="px-2.5 py-1 rounded text-xs font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  STAGE 0{activeStep.stageNumber} // {activeStep.title.toUpperCase()}
+                </span>
+                <span className="text-xs font-mono text-slate-400">({activeStep.role})</span>
+              </div>
+
+              <p className="text-slate-200 text-sm leading-relaxed max-w-3xl">
+                {activeStep.description}
+              </p>
+
+              {/* Key Implementation Highlights */}
+              <div className="pt-2">
+                <h5 className="text-xs font-mono text-slate-400 uppercase tracking-wider font-semibold mb-2">
+                  Key Engineering Responsibilities & Safeguards:
+                </h5>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {activeStep.features.map((feat, i) => (
+                    <div key={i} className="flex items-start gap-2 text-xs text-slate-300 font-mono">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                      <span>{feat}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Summary Pill */}
+            <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 text-xs font-mono space-y-3 shrink-0 lg:w-72">
+              <div className="text-slate-400 font-bold uppercase tracking-wider border-b border-slate-800 pb-2">
+                Architecture Snapshot
+              </div>
+              <div>
+                <span className="text-slate-500 block text-[10px]">PRIMARY STACK</span>
+                <span className="text-white font-semibold">{activeStep.tech.join(", ")}</span>
+              </div>
+              <div>
+                <span className="text-slate-500 block text-[10px]">BENCHMARK METRIC</span>
+                <span className="text-emerald-400 font-bold text-sm">
+                  {activeStep.metrics.value} ({activeStep.metrics.label})
+                </span>
+              </div>
+              <div className="pt-1 text-[11px] text-slate-400 leading-normal border-t border-slate-800">
+                Built to deliver responsive speed, strict data safety, and high reliability in production.
+              </div>
             </div>
           </div>
         </div>
       )}
     </div>
-  );
-}
-
-function NodeCard({
-  node,
-  isSelected,
-  isLeader,
-  onSelect,
-}: {
-  node: ArchitectureNode;
-  isSelected: boolean;
-  isLeader?: boolean;
-  onSelect: () => void;
-}) {
-  const getIcon = () => {
-    switch (node.type) {
-      case "gateway":
-        return <Shield className="w-4 h-4 text-cyan-400" />;
-      case "loadbalancer":
-        return <Radio className="w-4 h-4 text-blue-400" />;
-      case "service":
-        return <Cpu className="w-4 h-4 text-emerald-400" />;
-      case "cache":
-        return <Layers className="w-4 h-4 text-purple-400" />;
-      case "queue":
-        return <RefreshCw className="w-4 h-4 text-amber-400" />;
-      case "raft-db":
-        return <Database className="w-4 h-4 text-rose-400" />;
-    }
-  };
-
-  const getStatusColor = () => {
-    if (node.status === "failed") return "border-rose-500/60 bg-rose-950/30 text-rose-300";
-    if (node.status === "degraded") return "border-amber-500/60 bg-amber-950/30 text-amber-300";
-    return isSelected
-      ? "border-cyan-400 bg-slate-900 shadow-md shadow-cyan-500/20"
-      : "border-slate-800 bg-slate-900/90 hover:border-slate-700 hover:bg-slate-900";
-  };
-
-  return (
-    <button
-      onClick={onSelect}
-      className={`w-full text-left p-3.5 rounded-xl border transition-all duration-200 relative group cursor-pointer ${getStatusColor()}`}
-    >
-      <div className="flex items-start justify-between gap-2 mb-1.5">
-        <div className="flex items-center gap-2">
-          {getIcon()}
-          <span className="font-semibold text-xs text-white group-hover:text-cyan-300 transition-colors">
-            {node.name}
-          </span>
-        </div>
-        {isLeader && (
-          <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-rose-500 text-white uppercase tracking-tight">
-            Leader
-          </span>
-        )}
-      </div>
-
-      <p className="text-[11px] text-slate-400 line-clamp-1 mb-2 font-mono">{node.role}</p>
-
-      <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 pt-1.5 border-t border-slate-800/80">
-        <span>{node.tps.toLocaleString()} TPS</span>
-        <span className={node.status === "failed" ? "text-rose-400 font-bold" : "text-emerald-400"}>
-          {node.latency}
-        </span>
-      </div>
-    </button>
   );
 }

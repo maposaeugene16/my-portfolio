@@ -84,7 +84,7 @@ export default function Home() {
           <AlgorithmVisualizer />
         </section>
 
-        {/* Distributed Architecture Simulation */}
+        {/* Full-Stack Application Architecture */}
         <section id="architecture" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ArchitectureCanvas />
         </section>

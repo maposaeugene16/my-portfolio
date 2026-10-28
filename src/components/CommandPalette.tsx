@@ -58,9 +58,9 @@ export default function CommandPalette({
     },
     {
       id: "arch",
-      label: "Jump to Distributed Topology Canvas",
-      category: "Demos",
-      icon: <Layers className="w-4 h-4 text-blue-400" />,
+      label: "Jump to Full-Stack System Architecture (How I Build Apps)",
+      category: "Architecture",
+      icon: <Layers className="w-4 h-4 text-emerald-400" />,
       run: () => {
         onClose();
         onScrollTo("architecture");
