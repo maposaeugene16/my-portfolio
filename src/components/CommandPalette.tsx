@@ -68,12 +68,22 @@ export default function CommandPalette({
     },
     {
       id: "projects",
-      label: "Browse ZIMSCORE (Vercel) & GitHub Projects",
+      label: "Browse Live Vercel Healthcare Apps & GitHub Projects",
       category: "Navigation",
       icon: <Briefcase className="w-4 h-4 text-purple-400" />,
       run: () => {
         onClose();
         onScrollTo("projects");
+      },
+    },
+    {
+      id: "github-primary",
+      label: "Open Primary GitHub Profile (maposaeugene16)",
+      category: "Socials",
+      icon: <ExternalLink className="w-4 h-4 text-emerald-400" />,
+      run: () => {
+        onClose();
+        window.open("https://github.com/maposaeugene16", "_blank");
       },
     },
     {

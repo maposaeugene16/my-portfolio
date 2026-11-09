@@ -46,12 +46,170 @@ interface ProjectArchitecture {
 }
 
 export default function ArchitectureCanvas() {
-  const [selectedProjectId, setSelectedProjectId] = useState<string>("industry-hub");
+  const [selectedProjectId, setSelectedProjectId] = useState<string>("femora-women-clinic");
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
   const [isTracing, setIsTracing] = useState<boolean>(false);
   const [traceStep, setTraceStep] = useState<number | null>(null);
 
   const projects: ProjectArchitecture[] = [
+    {
+      id: "femora-women-clinic",
+      name: "Femora Women’s Clinic",
+      tagline: "Specialized Women's Healthcare Platform // Multi-City Doctor Booking & Delivery",
+      liveUrl: "https://femora-women-clinic.vercel.app",
+      sampleRequest: {
+        action: "Patient Books a Confidential Medical Consultation & Delivery",
+        step1: "Patient selects consultation and city center on Next.js UI; client validates request.",
+        step2: "Encrypted HTTPS POST sent to API with clinical appointment parameters and privacy headers.",
+        step3: "Consultation schedule logged in database with doctor availability and patient triage records.",
+        step4: "Vercel edge updates cache; instant confirmation and direct WhatsApp doctor triage launched.",
+      },
+      steps: [
+        {
+          id: "step-frontend-femora",
+          stageNumber: 1,
+          title: "Client & UI Layer",
+          role: "Next.js 14 Healthcare Portal",
+          tech: ["Next.js 14", "React", "Tailwind CSS", "TypeScript"],
+          description:
+            "Mobile-optimized clinical interface featuring accessible doctor profiles, comprehensive service catalogs, and one-tap confidential consultations.",
+          features: [
+            "App Router with Server & Client components for rapid loading",
+            "Responsive layout adapted for low-bandwidth mobile connections across Zimbabwe",
+            "Client-side form sanitization protecting patient medical inquiries",
+            "Discreet WhatsApp consultation routing and doctor appointment triggers",
+          ],
+          metrics: { label: "Mobile Page Load", value: "< 0.9s" },
+        },
+        {
+          id: "step-api-femora",
+          stageNumber: 2,
+          title: "API & Logic Layer",
+          role: "Clinical Routing & Triage API",
+          tech: ["Node.js", "REST Endpoints", "WhatsApp Business API", "JWT Security"],
+          description:
+            "Coordinates patient appointment dispatch, triage categorization, and multi-city delivery routing across Harare, Bulawayo, Mutare, and regional centers.",
+          features: [
+            "Encrypted request handling compliant with patient privacy standards",
+            "Multi-city delivery routing algorithm for medication dispatch",
+            "Instant WhatsApp triage dispatch with pre-filled clinical enquiry parameters",
+            "Rate-limiting middleware protecting clinical endpoints",
+          ],
+          metrics: { label: "Triage Latency", value: "~42ms" },
+        },
+        {
+          id: "step-db-femora",
+          stageNumber: 3,
+          title: "Database Layer",
+          role: "Clinical Services & Records Registry",
+          tech: ["PostgreSQL", "Relational Schema", "Encrypted Connection"],
+          description:
+            "Relational data model managing doctor availability, clinical treatment catalogs, diagnostic procedures, and regional clinic hubs.",
+          features: [
+            "ACID-compliant storage safeguarding consultation appointments",
+            "Indexed catalog search for ultrasound, maternal care, and wellness services",
+            "Data privacy protection separating patient records from public endpoints",
+            "Automated periodic backups and connection pooling",
+          ],
+          metrics: { label: "Query Execution", value: "< 10ms" },
+        },
+        {
+          id: "step-cloud-femora",
+          stageNumber: 4,
+          title: "Cloud & Deployment",
+          role: "Vercel Edge Cloud",
+          tech: ["Vercel Global Edge", "Git CI/CD", "SSL/TLS 1.3", "Automatic HTTPS"],
+          description:
+            "Zero-downtime production deployment on Vercel delivering nationwide availability for patients across all Zimbabwean cities and districts.",
+          features: [
+            "Continuous deployment triggered automatically on git commit to main branch",
+            "Global Edge CDN serving cached assets with sub-second response times",
+            "Strict HTTPS encryption protecting sensitive medical transmissions",
+            "24/7 uptime monitoring with real-time diagnostic telemetry",
+          ],
+          metrics: { label: "Edge SLA", value: "99.9%" },
+        },
+      ],
+    },
+    {
+      id: "medication-website",
+      name: "Aura Men & Women’s Clinic",
+      tagline: "Telehealth & Medical Platform // Bulawayo Suburb Delivery Routing",
+      liveUrl: "https://medication-website-alpha.vercel.app",
+      sampleRequest: {
+        action: "Patient Inquires About Confidential Treatment & Same-Day Delivery",
+        step1: "Patient selects treatment in responsive Next.js frontend; chooses Bulawayo suburb delivery.",
+        step2: "Request dispatched to API middleware with encrypted inquiry parameters and triage headers.",
+        step3: "Database verifies clinical service availability and delivery schedules for target suburb.",
+        step4: "Instant confirmation rendered via Vercel edge; confidential WhatsApp consultation opened.",
+      },
+      steps: [
+        {
+          id: "step-frontend-aura",
+          stageNumber: 1,
+          title: "Client & UI Layer",
+          role: "Mobile-First Patient Web App",
+          tech: ["Next.js 14", "React", "Tailwind CSS", "TypeScript"],
+          description:
+            "Discreet healthcare interface providing private access to men and women's medical treatments, clinical FAQs, and consultation booking.",
+          features: [
+            "Mobile-first design optimized for fast loading on 3G/4G networks",
+            "Direct one-tap WhatsApp doctor triage for maximum patient privacy",
+            "Bulawayo suburb delivery selector and clinical treatment catalog",
+            "Accessible typography and responsive navigation",
+          ],
+          metrics: { label: "First Load JS", value: "< 95 kB" },
+        },
+        {
+          id: "step-api-aura",
+          stageNumber: 2,
+          title: "API & Logic Layer",
+          role: "Telehealth Dispatch Microservice",
+          tech: ["RESTful API", "WhatsApp Triage", "JSON Schema Validation"],
+          description:
+            "Handles patient consultation triage, delivery location categorization, and clinical inquiry pre-formatting.",
+          features: [
+            "Input sanitization preventing malicious payload injections",
+            "Automated triage routing to clinical staff WhatsApp channels",
+            "Suburb-level geographical mapping for delivery logistics",
+            "Structured JSON response formatting with standard HTTP codes",
+          ],
+          metrics: { label: "API Response", value: "~35ms" },
+        },
+        {
+          id: "step-db-aura",
+          stageNumber: 3,
+          title: "Database Layer",
+          role: "Medical Treatments & Logistics Store",
+          tech: ["PostgreSQL", "Relational Models", "Indexed Tables"],
+          description:
+            "Stores treatment specifications, medical FAQ entries, suburb delivery routing zones, and consultation timestamps.",
+          features: [
+            "Normalized relational tables for treatments and medical advice categories",
+            "Fast indexed lookups for clinic treatments and delivery regions",
+            "Isolation of patient medical records with zero public exposure",
+            "Connection pool optimization",
+          ],
+          metrics: { label: "Lookup Latency", value: "< 12ms" },
+        },
+        {
+          id: "step-cloud-aura",
+          stageNumber: 4,
+          title: "Cloud & Deployment",
+          role: "Vercel Production Edge",
+          tech: ["Vercel", "GitHub CI/CD", "Edge CDN", "SSL/TLS"],
+          description:
+            "Production deployment ensuring 24/7 availability for patient consultations and telehealth inquiries.",
+          features: [
+            "High-availability serverless deployment on Vercel",
+            "Zero-configuration SSL certificates ensuring HTTPS privacy",
+            "Automated continuous integration pipeline from GitHub",
+            "Edge caching reducing load latency for local mobile users",
+          ],
+          metrics: { label: "Uptime SLA", value: "99.9%" },
+        },
+      ],
+    },
     {
       id: "industry-hub",
       name: "Course Shop & Industry Hub",
@@ -210,85 +368,6 @@ export default function ArchitectureCanvas() {
         },
       ],
     },
-    {
-      id: "zimscore",
-      name: "ZIMSCORE Web Platform",
-      tagline: "Academic Platform // Online Exam & Score Verification System",
-      liveUrl: "https://zimscore.vercel.app",
-      sampleRequest: {
-        action: "Student Verifies Examination Results",
-        step1: "User enters Candidate Number & PIN in the secure result lookup form.",
-        step2: "API receives request, hashes sensitive credentials, and checks rate limits.",
-        step3: "Database performs indexed search on verified examination records.",
-        step4: "Official tamper-evident result statement rendered and returned to user.",
-      },
-      steps: [
-        {
-          id: "step-frontend-zim",
-          stageNumber: 1,
-          title: "Client & UI Layer",
-          role: "Secure Verification Portal",
-          tech: ["Next.js", "React", "Tailwind CSS", "Client Security"],
-          description:
-            "Clean, authoritative interface for candidates, schools, and institutions to verify academic credentials.",
-          features: [
-            "Form field input sanitization preventing injection attacks",
-            "Printable result statement layout with official seals",
-            "Real-time feedback on invalid or missing candidate IDs",
-            "High-contrast, accessible typography for clarity",
-          ],
-          metrics: { label: "First Load JS", value: "< 85 kB" },
-        },
-        {
-          id: "step-api-zim",
-          stageNumber: 2,
-          title: "API & Logic Layer",
-          role: "Verification Engine",
-          tech: ["RESTful API", "Cryptographic Hashing", "Rate Limiter"],
-          description:
-            "Secure verification microservice enforcing strict rate-limiting to prevent automated scraping of student records.",
-          features: [
-            "Rate-limiting to thwart brute-force PIN attempts",
-            "Zero-trust credential verification logic",
-            "Audit trail logging for result queries",
-            "Standardized JSON error messaging",
-          ],
-          metrics: { label: "Verification Speed", value: "~55ms" },
-        },
-        {
-          id: "step-db-zim",
-          stageNumber: 3,
-          title: "Database Layer",
-          role: "Academic Records Vault",
-          tech: ["PostgreSQL", "Encrypted Fields", "ACID Quorum"],
-          description:
-            "Strictly guarded relational tables with academic session records, grades, candidate indexes, and school codes.",
-          features: [
-            "Deterministic indexing on candidate ID for instantaneous retrieval",
-            "Read-only query safeguards for public verification paths",
-            "Strict backup retention and recovery policies",
-            "Row-level security enforcement",
-          ],
-          metrics: { label: "Indexed Lookup", value: "< 8ms" },
-        },
-        {
-          id: "step-cloud-zim",
-          stageNumber: 4,
-          title: "Cloud & Deployment",
-          role: "Vercel Cloud Edge",
-          tech: ["Vercel", "Git Integration", "SSL Certificate"],
-          description:
-            "Reliable cloud deployment capable of handling traffic surges during national examination release dates.",
-          features: [
-            "Auto-scaling serverless capacity during result announcements",
-            "High-availability edge routing across regional nodes",
-            "Continuous deployment workflow",
-            "Complete HTTPS/TLS 1.3 encryption end-to-end",
-          ],
-          metrics: { label: "Peak Reliability", value: "99.95%" },
-        },
-      ],
-    },
   ];
 
   const currentProject = projects.find((p) => p.id === selectedProjectId) || projects[0];
@@ -385,7 +464,7 @@ export default function ArchitectureCanvas() {
         <div className="text-xs font-mono text-slate-400 uppercase tracking-wider mb-2 font-semibold">
           Select Real Project Architecture:
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
           {projects.map((proj) => {
             const isSelected = proj.id === selectedProjectId;
             return (

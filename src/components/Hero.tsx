@@ -52,7 +52,7 @@ export default function Hero({ onOpenTerminal, onScrollTo }: HeroProps) {
               }}
               className="flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition-all duration-200 shadow-xl shadow-emerald-500/25 active:scale-95"
             >
-              <span>View ZIMSCORE & Software Projects</span>
+              <span>View Live Vercel & Software Projects</span>
               <ArrowRight className="w-4 h-4" />
             </button>
 

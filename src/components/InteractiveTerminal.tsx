@@ -278,8 +278,8 @@ export default function InteractiveTerminal({
               <p><span className="text-cyan-400 font-bold">Degree:</span> B.Sc. (Honours) Computer Science (2.1 Upper Second Class)</p>
               <p><span className="text-cyan-400 font-bold">Graduation:</span> 17 November 2026</p>
               <p><span className="text-cyan-400 font-bold">Location:</span> Bulawayo, Zimbabwe</p>
-              <p><span className="text-cyan-400 font-bold">Primary Stack:</span> TypeScript, React, Next.js, Node.js, Supabase, Tailwind</p>
-              <p><span className="text-cyan-400 font-bold">GitHub:</span> Eugene-maposa • maposaeugene16</p>
+              <p><span className="text-cyan-400 font-bold">Primary Stack:</span> TypeScript, React, Next.js 14, Node.js, Supabase, PostgreSQL, Tailwind</p>
+              <p><span className="text-cyan-400 font-bold">GitHub:</span> <a href="https://github.com/maposaeugene16" target="_blank" className="text-emerald-400 underline font-bold">maposaeugene16 (Primary)</a> • <a href="https://github.com/Eugene-maposa" target="_blank" className="text-slate-400 underline">Eugene-maposa</a></p>
             </div>
           </div>
         );
@@ -315,7 +315,7 @@ export default function InteractiveTerminal({
             <p>📧 Secondary: <span className="text-cyan-400">mapseujers@gmail.com</span></p>
             <p>📱 Phones: <span className="text-emerald-400 font-bold">+263 775 126 513</span> / <span className="text-emerald-400 font-bold">+263 713 641 507</span></p>
             <p>📍 Location: <span className="text-slate-300">Mavondo Rd, Nkulumane 12, Bulawayo, Zimbabwe</span></p>
-            <p>🐙 GitHub: <a href="https://github.com" target="_blank" className="text-cyan-400 underline">github.com</a> (Accounts: maposa.eugene16@gmail.com • mapseujers@gmail.com)</p>
+            <p>🐙 GitHub: <a href="https://github.com/maposaeugene16" target="_blank" className="text-emerald-400 font-bold underline">github.com/maposaeugene16</a> (Secondary: <a href="https://github.com/Eugene-maposa" target="_blank" className="text-slate-400 underline">Eugene-maposa</a>)</p>
             <p>💼 LinkedIn: <a href="https://linkedin.com/in/eugene-maposa" target="_blank" className="text-cyan-400 underline">linkedin.com/in/eugene-maposa</a></p>
             <p>🔑 PGP Fingerprint: <span className="text-amber-400 font-bold">{PORTFOLIO_DATA.profile.socials.pgpKeyId}</span></p>
           </div>

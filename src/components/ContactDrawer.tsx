@@ -228,6 +228,24 @@ mQGNBF+8/eEBDADX7gL47Xo/yq64o0iX69d4l87SjS1W1Q3fX30xT9kR3m2L
                   </div>
                 </a>
 
+                {/* Primary GitHub Profile */}
+                <a
+                  href={PORTFOLIO_DATA.profile.socials.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-500/40 hover:bg-slate-900 transition-all flex items-center gap-3 group"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <Github className="w-4 h-4" />
+                  </div>
+                  <div className="truncate">
+                    <span className="text-[10px] text-emerald-400 font-bold block uppercase">Primary GitHub Account</span>
+                    <span className="text-xs text-slate-200 font-bold block">
+                      github.com/maposaeugene16
+                    </span>
+                  </div>
+                </a>
+
                 {/* Residential Address */}
                 <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center gap-3 sm:col-span-2">
                   <div className="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">

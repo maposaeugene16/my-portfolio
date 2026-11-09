@@ -3,7 +3,7 @@ export interface Project {
   slug: string;
   title: string;
   tagline: string;
-  category: "Fintech & Web Systems" | "Full-Stack & Geolocation" | "Campus & Enterprise Systems" | "Systems & Utilities";
+  category: "Healthcare & Web Platforms" | "Fintech & Web Systems" | "Full-Stack & Geolocation" | "Campus & Enterprise Systems" | "Systems & Utilities";
   featured: boolean;
   status: "Live on Vercel" | "Hackathon Solution" | "University Platform" | "Active";
   metrics: { label: string; value: string }[];
@@ -81,9 +81,9 @@ export const PORTFOLIO_DATA = {
       { label: "A-Level CompSci", value: "Grade A" }
     ],
     socials: {
-      github: "https://github.com/Eugene-maposa",
-      githubSecondary: "https://github.com/maposaeugene16",
-      githubAccounts: ["Eugene-maposa", "maposaeugene16"],
+      github: "https://github.com/maposaeugene16",
+      githubSecondary: "https://github.com/Eugene-maposa",
+      githubAccounts: ["maposaeugene16", "Eugene-maposa"],
       linkedin: "https://linkedin.com/in/eugene-maposa",
       email: "maposa.eugene16@gmail.com",
       secondaryEmail: "mapseujers@gmail.com",
@@ -149,6 +149,56 @@ export const PORTFOLIO_DATA = {
 
   projects: [
     {
+      id: "femora-women-clinic",
+      slug: "femora-women-clinic",
+      title: "Femora Women’s Clinic Platform",
+      tagline: "Specialized clinical care & doctor-led appointment booking platform deployed live on Vercel serving Zimbabwe nationwide.",
+      category: "Healthcare & Web Platforms",
+      featured: true,
+      status: "Live on Vercel",
+      badge: "Live Healthcare Platform",
+      liveUrl: "https://femora-women-clinic.vercel.app",
+      metrics: [
+        { label: "Deployment", value: "Vercel Live" },
+        { label: "Framework", value: "Next.js 14" },
+        { label: "Clinical Scope", value: "Nationwide Zimbabwe" }
+      ],
+      overview: "Production women's healthcare web platform developed for Femora Women’s Clinic, led by Dr. Selena. Provides comprehensive clinical service discovery, doctor consultation booking, ultrasound scheduling, and discreet medication logistics across Harare, Bulawayo, Mutare, Gweru, Masvingo, and nationwide Zimbabwe.",
+      highlights: [
+        "Deployed live on Vercel with high-availability edge delivery and mobile optimization",
+        "Interactive service discovery covering maternal wellness, ultrasound, and fertility care",
+        "Confidential medical consultation dispatch with direct WhatsApp routing",
+        "Multi-city coverage routing for Harare, Bulawayo, Midlands, and Manicaland regions"
+      ],
+      techStack: ["Next.js 14", "React", "TypeScript", "Tailwind CSS", "Vercel", "WhatsApp API"],
+      githubUrl: "https://github.com/maposaeugene16/femora-women-clinic"
+    },
+    {
+      id: "medication-website-alpha",
+      slug: "medication-website-alpha",
+      title: "Aura Men & Women’s Clinic",
+      tagline: "Confidential healthcare, clinical treatments, and direct WhatsApp telehealth consultation platform in Bulawayo.",
+      category: "Healthcare & Web Platforms",
+      featured: true,
+      status: "Live on Vercel",
+      badge: "Live Telehealth Platform",
+      liveUrl: "https://medication-website-alpha.vercel.app",
+      metrics: [
+        { label: "Deployment", value: "Vercel Live" },
+        { label: "Triage Engine", value: "WhatsApp Telehealth" },
+        { label: "Local Routing", value: "All Bulawayo Suburbs" }
+      ],
+      overview: "Full-stack medical consultation and pharmaceutical inquiry platform engineered for Aura Men & Women's Clinic in Bulawayo, Zimbabwe. Provides discreet access to reproductive wellness, family planning, confidential STI screening, men's vitality therapy, and same-day delivery routing across all Bulawayo suburbs.",
+      highlights: [
+        "Live on Vercel with responsive mobile-first architecture optimized for local connectivity",
+        "Discreet medical consultation dispatch with end-to-end confidential WhatsApp triage",
+        "Comprehensive clinical treatments directory with doctor-led guidance and FAQ",
+        "Suburb-level localized delivery and appointment inquiry routing across Bulawayo"
+      ],
+      techStack: ["Next.js 14", "React", "TypeScript", "Tailwind CSS", "Vercel", "WhatsApp API"],
+      githubUrl: "https://github.com/maposaeugene16/medication-website-alpha"
+    },
+    {
       id: "industry-hub",
       slug: "course-shop-industry-hub",
       title: "Course Shop & Industry Hub",
@@ -171,7 +221,7 @@ export const PORTFOLIO_DATA = {
         "Type-safe form schemas with Zod and responsive Radix UI component primitives"
       ],
       techStack: ["TypeScript", "React", "Vite", "Tailwind CSS", "Radix UI", "Zod", "Vercel"],
-      githubUrl: "https://github.com/Eugene-maposa/course-shop-industry-hub"
+      githubUrl: "https://github.com/maposaeugene16/industry-hub"
     },
     {
       id: "citycasuallink",
@@ -181,7 +231,7 @@ export const PORTFOLIO_DATA = {
       category: "Full-Stack & Geolocation",
       featured: true,
       status: "Live on Vercel",
-      badge: "Hackathon Project",
+      badge: "Hackathon Solution",
       liveUrl: "https://citycasuallink-au82.vercel.app",
       metrics: [
         { label: "Deployment", value: "Vercel Live" },
@@ -207,6 +257,7 @@ export const PORTFOLIO_DATA = {
       featured: true,
       status: "Live on Vercel",
       badge: "Selected Project on CV",
+      liveUrl: "https://zimscore-fintech.vercel.app",
       metrics: [
         { label: "Deployment", value: "Vercel Domain" },
         { label: "Frontend", value: "React + Vite" },
@@ -220,7 +271,7 @@ export const PORTFOLIO_DATA = {
         "Responsive, intuitive financial dashboards and risk metrics"
       ],
       techStack: ["TypeScript", "React", "Vite", "Tailwind CSS", "Vitest", "Vercel"],
-      githubUrl: "https://github.com/Eugene-maposa/zimscore-fintech"
+      githubUrl: "https://github.com/maposaeugene16/zimscore-fintech"
     },
     {
       id: "nust-tech-hub",
@@ -228,7 +279,7 @@ export const PORTFOLIO_DATA = {
       title: "NUST Tech Hub & Innovation Portal",
       tagline: "University innovation management web app with in-browser QR code verification and PDF certificate exports.",
       category: "Campus & Enterprise Systems",
-      featured: true,
+      featured: false,
       status: "University Platform",
       badge: "University Platform",
       metrics: [

@@ -11,9 +11,10 @@ export default function ProjectsSection() {
 
   const categories = [
     "All",
-    "Fintech & Web Systems",
-    "Full-Stack & Geolocation",
+    "Healthcare & Web Platforms",
     "Campus & Enterprise Systems",
+    "Full-Stack & Geolocation",
+    "Fintech & Web Systems",
     "Systems & Utilities"
   ];
 
@@ -29,13 +30,13 @@ export default function ProjectsSection() {
           <div>
             <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-mono mb-3">
               <Layers className="w-3.5 h-3.5" />
-              Software Repositories & Applications
+              Verified GitHub Repositories & Live Web Apps
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
               Software Engineering Projects
             </h2>
             <p className="text-slate-400 text-base max-w-2xl mt-2">
-              Full-stack software applications developed in TypeScript, React, Leaflet maps, LiveKit WebRTC, and Supabase cloud backends.
+              Full-stack software applications and healthcare platforms built with Next.js 14, React, TypeScript, Leaflet maps, WebRTC, and PostgreSQL / Supabase, hosted on Vercel.
             </p>
           </div>
 
